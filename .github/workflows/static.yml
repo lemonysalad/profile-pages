@@ -1,0 +1,37 @@
+name: Deploy static content to Pages
+
+on:
+  push:
+    branches: ["main"]  # Runs on push to the main branch
+  workflow_dispatch:  # Allows manual triggering
+
+permissions:
+  contents: read  # Read repo contents
+  pages: write  # Allow writing to GitHub Pages
+  id-token: write  # Required for authentication
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false  # Ensures deployments are not interrupted
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4  # Checks out the repo
+      
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5  # Configures GitHub Pages
+
+      - name: Upload Static Site Files
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'  # Change this if your files are in a subfolder (e.g., 'public' or 'docs')
+
+      - name: Deploy to GitHub Pages
+        id
+
